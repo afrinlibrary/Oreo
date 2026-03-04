@@ -24,8 +24,9 @@ public class Lock extends Command {
             ThreadChannel thread = (ThreadChannel) event.getChannel();
             String opId = thread.getOwnerId();
             String uId = event.getAuthor().getId();
-
-            if (event.getMember().hasPermission(Permission.BAN_MEMBERS) && args.isEmpty()) {
+            boolean isStaff = event.getMember()
+                              .hasPermission(Permission.MANAGE_THREADS);
+            if (isStaff && args.isEmpty()) {
                 thread.getManager().setLocked(true).queue(
                         s -> event.replySuccess("Channel locked with no label"),
                         f -> event.replyError("Failed to lock channel [%s]".formatted(f.getMessage()))
@@ -33,7 +34,7 @@ public class Lock extends Command {
                 return;
             }
 
-            if (event.getMember().hasPermission(Permission.BAN_MEMBERS)) {
+            if (isStaff) {
                 thread.getManager().setLocked(true).setName("[%s] %s".formatted(args, thread.getName())).queue(
                         s -> event.replySuccess("Channel locked with label [%s]".formatted(args)),
                         f -> event.replyError("Failed to lock channel [%s]".formatted(f.getMessage()))
