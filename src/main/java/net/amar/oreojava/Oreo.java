@@ -74,7 +74,7 @@ public class Oreo {
                 new ModsBlacklist(),
                 new Lock(),
 
-                // owner
+                // owoner
                 new HostInfo(),
                 new AddData(),
                 new EraseData(),
