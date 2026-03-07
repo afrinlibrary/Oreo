@@ -35,7 +35,7 @@ public class AddData extends Command {
         if (DBGetter.dataAlreadyExists(fieldName, Oreo.getConnection())) {
             try {
                 DBUpdater.updateData(Oreo.getConnection(), new Data(fieldName, fieldValue));
-                event.replySuccess("Updated *"+fieldName+"* to ["+fieldValue+"]");
+                event.replySuccess("Updated *"+fieldName+"* to ["+fieldValue+"] :3");
             } catch (SQLException e) {
                 event.replyError("Failed to update value: ["+e.getMessage()+"]");
             }
