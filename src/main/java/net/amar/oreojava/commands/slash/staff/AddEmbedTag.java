@@ -13,8 +13,6 @@ import net.dv8tion.jda.api.interactions.InteractionContextType;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
-import org.sqlite.SQLiteErrorCode;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,13 +60,6 @@ public class AddEmbedTag extends SlashCommand {
 
             else event.replyFormat("Added tag **%s**, Title: [%s]\nDescription: [%s]",tagId, title, description).setEphemeral(true).queue();
         } catch (SQLException e) {
-
-            if (e.getErrorCode() == SQLiteErrorCode.SQLITE_CONSTRAINT_PRIMARYKEY.code) {
-                event.replyFormat("A tag with the ID **%s** already exists", tagId).queue();
-                Log.error("Tried to insert an EmbedTab ID into table embedtags that already exists",e);
-                return;
-            }
-
             Log.error("Failure while trying to insert an EmbedTag object to DB", e);
             event.replyFormat("Failed to add tag with message [%s]", e.getMessage()).queue();
         }
