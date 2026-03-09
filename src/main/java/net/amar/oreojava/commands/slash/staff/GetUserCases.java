@@ -88,6 +88,6 @@ public class GetUserCases extends SlashCommand {
                 .setTimeout(1, TimeUnit.MINUTES)
                 .build();
         embedPaginator.display(event.getHook());
-        event.reply("Getting cases...").setEphemeral(true).queue();
+        event.reply("Getting cases...").queue();
     }
 }
