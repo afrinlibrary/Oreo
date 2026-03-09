@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.command.SlashCommand;
 import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import net.amar.oreojava.commands.Categories;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.InteractionContextType;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -26,7 +27,12 @@ public class GetModCases extends SlashCommand {
     }
     @Override
     protected void execute(SlashCommandEvent event) {
-        User user = event.optUser("mod");
-        GetUserCases.paginateCases(user, event, false);
+        Member user = event.optMember("mod");
+        if (user == null) return;
+        if (!user.hasPermission(Permission.BAN_MEMBERS)) {
+            event.reply("This user is NOT a moderator").queue();
+            return;
+        }
+        GetUserCases.paginateCases(user.getUser(), event, false);
     }
 }
