@@ -28,7 +28,7 @@ public class GetModCases extends SlashCommand {
     protected void execute(SlashCommandEvent event) {
         Member user = event.optMember("mod");
         if (user == null) return;
-        if (!user.hasPermission(Permission.BAN_MEMBERS)) {
+        if (!user.hasPermission(Permission.MODERATE_MEMBERS)) {
             event.reply("This user is NOT a moderator").queue();
             return;
         }
