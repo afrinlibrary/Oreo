@@ -54,7 +54,7 @@ public class MuteSlash extends SlashCommand {
         if (ParseMute.mute(u.getUser(), amount, duration, event.getGuild(), reason)) {
 
             if (!mod.canInteract(u)) {
-                event.reply("You can't punish a person with a higher tole").queue();
+                event.reply("You can't punish a person with a higher role").queue();
                 return;
             }
 

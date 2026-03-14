@@ -61,7 +61,7 @@ public class BanSlash extends SlashCommand {
         assert moderator != null;
 
         if (!moderator.canInteract(user)) {
-            event.reply("You can't punish a person with a higher tole").queue();
+            event.reply("You can't punish a person with a higher role").queue();
             return;
         }
 

@@ -9,7 +9,6 @@ import net.amar.oreojava.db.tables.Case;
 import net.amar.oreojava.handlers.Verdict;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.InteractionContextType;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -51,7 +50,7 @@ public class KickSlash extends SlashCommand {
             assert user != null;
 
             if (!moderator.canInteract(user)) {
-                event.reply("You can't punish a person with a higher tole").queue();
+                event.reply("You can't punish a person with a higher role").queue();
                 return;
             }
 
