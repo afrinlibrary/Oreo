@@ -137,12 +137,11 @@ public class Oreo {
 
      help.getClient().getCommands().forEach(c -> {
 
-       StringBuilder aliases = new StringBuilder();
+       String aliases = "empty";
 
        if (c.getAliases() != null) {
-         for (String a : c.getAliases())
-           aliases.append(a).append(", ");
-       } else aliases.append("empty");
+         aliases = String.join(", ", c.getAliases());
+       } 
 
        if (c.getCategory()==Categories.owner) {
          ownerCmds.append("\n")
