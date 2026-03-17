@@ -130,7 +130,8 @@ public class Oreo {
      StringBuilder sb = new StringBuilder();
 
      help.getClient().getCommands().forEach(c -> {
-        sb.append("**")
+        sb.append("\n")
+          .append("**")
           .append(c.getName())
           .append("** - ")
           .append(c.getHelp() == null ? "no description" : c.getHelp())
