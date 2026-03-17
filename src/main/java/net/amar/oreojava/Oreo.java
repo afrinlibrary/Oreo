@@ -4,6 +4,8 @@ import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.examples.command.PingCommand;
+
+import net.amar.oreojava.commands.Categories;
 import net.amar.oreojava.commands.slash.general.GetEmoji;
 import net.amar.oreojava.commands.slash.owner.SetBotActivity;
 import net.amar.oreojava.commands.slash.staff.*;
@@ -30,6 +32,7 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.concrete.ForumChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.Permission;
 
 import java.awt.Color;
 import java.sql.Connection;
@@ -127,23 +130,65 @@ public class Oreo {
     // and add more features
 
     private void helpCmdReply(CommandEvent help) {
-     StringBuilder sb = new StringBuilder();
+
+     StringBuilder generalCmds = new StringBuilder();
+     StringBuilder staffCmds = new StringBuilder();
+     StringBuilder ownerCmds = new StringBuilder();
 
      help.getClient().getCommands().forEach(c -> {
-        sb.append("\n")
-          .append("**")
-          .append(c.getName())
-          .append("** - ")
-          .append(c.getHelp() == null ? "no description" : c.getHelp())
-          .append("\n");
+
+       if (c.getCategory()==Categories.owner) {
+         ownerCmds.append("\n")
+           .append("**%s** - ".formatted(c.getName()))
+           .append("%s ( %s )".formatted(c.getHelp(), c.getArguments()))
+           .append("-# Aliases: %s".formatted(c.getAliases().toString()))
+           .append("\n");
+       }
+
+       if (c.getCategory()==Categories.staff) {
+         staffCmds.append("\n")
+           .append("**%s** - ".formatted(c.getName()))
+           .append("%s ( %s )".formatted(c.getHelp(), c.getArguments()))
+           .append("-# Aliases: %s".formatted(c.getAliases().toString()))
+           .append("\n");
+       }
+
+       if (c.getCategory()==Categories.general) {
+         generalCmds.append("\n")
+           .append("**%s** - ".formatted(c.getName()))
+           .append("%s ( %s )".formatted(c.getHelp(), c.getArguments()))
+           .append("-# Aliases: %s".formatted(c.getAliases().toString()))
+           .append("\n");
+       }
+
      });
 
      EmbedBuilder em = new EmbedBuilder()
          .setTitle("Available Text Commands")
-         .setDescription(sb.toString())
          .setColor(Color.CYAN)
          .setFooter("MoJava", help.getSelfUser().getAvatarUrl())
          .setTimestamp(OffsetDateTime.now());
+     
+     boolean isOwner = help.getAuthor()
+       .getId().equals(help.getClient().getOwnerId());
+
+     boolean isStaff = help.getMember()
+       .hasPermission(Permission.MODERATE_MEMBERS);
+
+     if (isOwner)
+       em.setDescription("""
+           General commands :- %s
+           Staff commands :- %s
+           Owner commands :- %s
+           """.formatted(generalCmds, staffCmds, ownerCmds));
+
+     else if (isStaff)
+       em.setDescription("""
+           General commands :- %s 
+           Staff commands :- %s 
+           """.formatted(generalCmds, staffCmds));
+
+     else em.setDescription("General commands :- "+generalCmds);
 
      help.reply(em.build());
     }
