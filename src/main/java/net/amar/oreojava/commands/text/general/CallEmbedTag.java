@@ -37,7 +37,8 @@ public class CallEmbedTag extends Command {
             em.setTitle(embedTag.getTitle());
             em.setDescription(embedTag.getDescription());
             em.setColor(Color.cyan);
-            em.setFooter("", event.getJDA().getSelfUser().getAvatarUrl());
+            em.setFooter("Requested by: "+event.getAuthor().getName(), event.getJDA().getSelfUser().getAvatarUrl());
+            em.setTimestamp(OffsetDateTime.now());
 
             if (event.getMessage().getReferencedMessage()!=null) {
                 event.getMessage().getReferencedMessage().replyEmbeds(em.build()).queue();
