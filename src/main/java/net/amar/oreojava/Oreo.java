@@ -1,11 +1,9 @@
 package net.amar.oreojava;
 
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
-import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.examples.command.PingCommand;
 
-import net.amar.oreojava.commands.Categories;
 import net.amar.oreojava.commands.slash.general.GetEmoji;
 import net.amar.oreojava.commands.slash.owner.SetBotActivity;
 import net.amar.oreojava.commands.slash.staff.*;
@@ -25,20 +23,17 @@ import net.amar.oreojava.db.tables.Data;
 import net.amar.oreojava.db.tables.EmbedTag;
 import net.amar.oreojava.events.Honeypot;
 import net.amar.oreojava.events.SupportThreads;
-import net.dv8tion.jda.api.EmbedBuilder;
+import net.amar.oreojava.handlers.Help;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.concrete.ForumChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.Permission;
 
-import java.awt.Color;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.time.OffsetDateTime;
 import java.util.EnumSet;
 
 public class Oreo {
@@ -62,7 +57,7 @@ public class Oreo {
         CmdClientBuilder.forceGuildOnly(Util.serverId());
         CmdClientBuilder.setPrefix("!!");
         CmdClientBuilder.setPrefixes(prefixes);
-        CmdClientBuilder.setHelpConsumer(help -> helpCmdReply(help));
+        CmdClientBuilder.setHelpConsumer(Help::helpCmdReply);
         CmdClientBuilder.addCommands(
                 // No category
                 new PingCommand(),
@@ -123,80 +118,6 @@ public class Oreo {
         } catch (Exception e) {
             Log.error("Failed to build bot instance",e);
         }
-    }
-
-    // Temp, dont know where to put this thing
-    // TODO: make a class for the setHelpConsumer
-    // and add more features
-
-    private void helpCmdReply(CommandEvent help) {
-
-     StringBuilder generalCmds = new StringBuilder();
-     StringBuilder staffCmds = new StringBuilder();
-     StringBuilder ownerCmds = new StringBuilder();
-
-     help.getClient().getCommands().forEach(c -> {
-
-       String aliases = "empty";
-
-       if (c.getAliases() != null) {
-         aliases = String.join(", ", c.getAliases());
-       } 
-
-       if (c.getCategory()==Categories.owner) {
-         ownerCmds.append("\n")
-           .append("**%s** - ".formatted(c.getName()))
-           .append("%s".formatted(c.getHelp()))
-           .append("\n-# Aliases: [%s]".formatted(aliases))
-           .append("\n");
-       }
-
-       if (c.getCategory()==Categories.staff) {
-         staffCmds.append("\n")
-           .append("**%s** - ".formatted(c.getName()))
-           .append("%s".formatted(c.getHelp()))
-           .append("\n-# Aliases: [%s]".formatted(aliases))
-           .append("\n");
-       }
-
-       if (c.getCategory()==Categories.general) {
-         generalCmds.append("\n")
-           .append("**%s** - ".formatted(c.getName()))
-           .append("%s".formatted(c.getHelp()))
-           .append("\n-# Aliases: [%s]".formatted(aliases))
-           .append("\n");
-       }
-
-     });
-
-     EmbedBuilder em = new EmbedBuilder()
-         .setTitle("Available Text Commands")
-         .setColor(Color.CYAN)
-         .setFooter("MoJava", help.getSelfUser().getAvatarUrl())
-         .setTimestamp(OffsetDateTime.now());
-     
-     boolean isOwner = help.getAuthor()
-       .getId().equals(help.getClient().getOwnerId());
-
-     boolean isStaff = help.getMember()
-       .hasPermission(Permission.MODERATE_MEMBERS);
-
-     if (isOwner)
-       em.setDescription("""
-           ## General commands :- %s
-           ## Staff commands :- %s
-           ## Owner commands :- %s
-           """.formatted(generalCmds, staffCmds, ownerCmds));
-
-     else if (isStaff)
-       em.setDescription("""
-           ## General commands :- %s 
-           ## Staff commands :- %s 
-           """.formatted(generalCmds, staffCmds));
-
-     else em.setDescription("## General commands :- "+generalCmds);
-
-     help.reply(em.build());
     }
 
     public static JDA getJDA() {

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="31e3093c-df75-4ba1-a7e4-ae66b5fbb06a" name="amaroreo Mapping">
+      <data-sources db="70d74718-ef4d-443d-ba41-256086522361" />
+      <scope>
+        <node kind="database" negative="1" />
+      </scope>
+    </mapping>
+  </component>
+</project>
