@@ -9,6 +9,7 @@ import net.amar.oreojava.db.tables.Case;
 import net.amar.oreojava.handlers.Verdict;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.InteractionContextType;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -44,6 +45,7 @@ public class BanSlash extends SlashCommand {
     protected void execute(@NotNull SlashCommandEvent event) {
         Member moderator = event.getMember();
         Member user = event.getOption("user").getAsMember();
+        User u = user.getUser(); 
         String reason = event.getOption("reason").getAsString();
         Message.Attachment image = null;
         int deleteDays = 0;
@@ -82,7 +84,7 @@ public class BanSlash extends SlashCommand {
            else
                Verdict.buildVerdict(modCase, Oreo.getVerdictChannel(), user.getUser(), image.getUrl());
 
-           event.getGuild().ban(user, deleteDays, TimeUnit.DAYS).reason(reason).queue();
+           event.getGuild().ban(u, deleteDays, TimeUnit.DAYS).reason(reason).queue();
            event.replyFormat("Banned **%s** for Reason: **%s**", user.getUser().getName(), reason).queue();
         } catch (Exception e) {
             Log.error("Something went wrong while executing /ban command",e);

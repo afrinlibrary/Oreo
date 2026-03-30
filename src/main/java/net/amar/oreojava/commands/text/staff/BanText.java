@@ -45,14 +45,15 @@ public class BanText extends Command {
                 : event.getMessage().getAttachments().get(0).getUrl();
         Member m = event.getMember();
 
-        event.getGuild().retrieveMemberById(uid).queue((mm) -> {
-            if (m.canInteract(mm)) {
+        event.getJDA().retrieveUserById(uid).queue((mm) -> {
+            Member mem = event.getGuild().retrieveMemberById(mm.getId()).complete();
+            if (m.canInteract(mem)) {
                 event.getGuild().ban(mm, 0, TimeUnit.DAYS)
                         .reason(reason)
                         .queue(success -> {
                             Case c = new Case(
-                                    mm.getUser().getId(),
-                                    mm.getUser().getName(),
+                                    mm.getId(),
+                                    mm.getName(),
                                     m.getUser().getId(),
                                     m.getUser().getName(),
                                     "BAN",
@@ -60,7 +61,7 @@ public class BanText extends Command {
                                     "",
                                     true
                             );
-                            Verdict.buildVerdict(c, Oreo.getVerdictChannel(), mm.getUser(), proof);
+                            Verdict.buildVerdict(c, Oreo.getVerdictChannel(), mm, proof);
                             event.replySuccess("Banned **%s** for *%s*".formatted(mm.getEffectiveName(), reason));
                         });
             } else {
