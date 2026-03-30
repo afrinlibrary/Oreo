@@ -39,21 +39,33 @@ public class BanText extends Command {
 
         String uid = args[0].replaceAll("\\D", "");
         String reason = args[1];
+        //String flag = args[2];
 
         String proof = event.getMessage().getAttachments().isEmpty()
                 ? null
                 : event.getMessage().getAttachments().get(0).getUrl();
         Member m = event.getMember();
-        Member mem = event.getGuild().retrieveMemberById(uid).complete();
-        event.getJDA().retrieveUserById(uid).queue((mm) -> {
       
-            if (m.canInteract(mem)) {
+    /*   finish this shit later dude
+     *
+     *   if (!flag.isBlank() && ("f".equals(flag) || "-f".equals(flag) && event.getMember().hasPermission(Permission.ADMINISTRATOR))) {
+          event.getJDA().retrieveUserById(uid).queue(u -> {
+            event.getGuild().ban(u, 7, TimeUnit.DAYS)
+              .reason(reason)
+              .queue(s -> {
+                Case c = new Case(u.getId(), u.getName(), m.getUser().getId(), m.getUser().getName(), "BAN", reason, "", false);
+              });
+          });
+        }
+*/
+        event.getGuild().retrieveMemberById(uid).queue((mm) -> { 
+            if (m.canInteract(mm)) {
                 event.getGuild().ban(mm, 0, TimeUnit.DAYS)
                         .reason(reason)
                         .queue(success -> {
                             Case c = new Case(
-                                    mm.getId(),
-                                    mm.getName(),
+                                    mm.getUser().getId(),
+                                    mm.getUser().getName(),
                                     m.getUser().getId(),
                                     m.getUser().getName(),
                                     "BAN",
@@ -61,7 +73,7 @@ public class BanText extends Command {
                                     "",
                                     true
                             );
-                            Verdict.buildVerdict(c, Oreo.getVerdictChannel(), mm, proof);
+                            Verdict.buildVerdict(c, Oreo.getVerdictChannel(), mm.getUser(), proof);
                             event.replySuccess("Banned **%s** for *%s*".formatted(mm.getEffectiveName(), reason));
                         });
             } else {
