@@ -115,12 +115,15 @@ public class SupportThreads extends ListenerAdapter {
         String ramAllocated = "";
         String mcVersion = "";
         String javaVersion = "";
+        String apiLevel = "";
 
         for (String line : logContent) {
 
             if (isMojoLog) continue;
             else isMojoLog = line.contains("git.artdeell.mojo") || line.contains("git.artdeell.mojo.debug");
 
+            if (line.startsWith("Info: API version"))
+                apiLevel = line.substring("Info: API version:".length()).trim();
             if (line.startsWith("Info: Launcher version:"))
                 mojoVersion = line.substring("Info: Launcher version:".length()).trim();
             if (line.startsWith("Info: Architecture:"))
@@ -158,6 +161,7 @@ public class SupportThreads extends ListenerAdapter {
         EmbedBuilder em = new EmbedBuilder();
         em.setTitle("**Log information**");
         em.setDescription("**Mojo version:**\n" + mojoVersion
+                + "\n**API Level**\n" + apiLevel
                 + "\n**Device model:**\n" + deviceModel
                 + "\n**Device GPU:**\n" + deviceGPU
                 + "\n**Device architecture:**\n" + deviceArch
