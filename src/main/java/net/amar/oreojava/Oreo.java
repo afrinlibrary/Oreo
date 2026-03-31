@@ -11,11 +11,38 @@ import net.amar.oreojava.commands.text.general.CallEmbedTag;
 import net.amar.oreojava.commands.text.general.GetPrefixes;
 import net.amar.oreojava.commands.text.general.HostInfo;
 import net.amar.oreojava.commands.text.general.MCBugTracker;
+
+// ── New MC commands ──────────────────────────────────────────────────────────
+import net.amar.oreojava.commands.text.general.McStatus;
+import net.amar.oreojava.commands.text.general.McPlayer;
+import net.amar.oreojava.commands.text.general.McSkin;
+import net.amar.oreojava.commands.text.general.McWiki;
+import net.amar.oreojava.commands.text.general.McVersion;
+import net.amar.oreojava.commands.text.general.McBugReport;
+import net.amar.oreojava.commands.text.general.Seed;
+import net.amar.oreojava.commands.text.general.Recipe;
+import net.amar.oreojava.commands.text.general.Enchants;
+import net.amar.oreojava.commands.text.general.Spawn;
+// ─────────────────────────────────────────────────────────────────────────────
+
 import net.amar.oreojava.commands.text.owner.AddData;
 import net.amar.oreojava.commands.text.owner.EraseData;
 import net.amar.oreojava.commands.text.owner.LeaveServers;
 import net.amar.oreojava.commands.text.owner.RevokeInvites;
 import net.amar.oreojava.commands.text.staff.*;
+
+// ── New moderation commands ───────────────────────────────────────────────────
+import net.amar.oreojava.commands.text.staff.GetWarns;
+import net.amar.oreojava.commands.text.staff.ClearWarns;
+import net.amar.oreojava.commands.text.staff.Slowmode;
+import net.amar.oreojava.commands.text.staff.Unlock;
+import net.amar.oreojava.commands.text.staff.Purge;
+import net.amar.oreojava.commands.text.staff.Softban;
+import net.amar.oreojava.commands.text.staff.TempBan;
+import net.amar.oreojava.commands.text.staff.Note;
+import net.amar.oreojava.commands.text.staff.Role;
+// ─────────────────────────────────────────────────────────────────────────────
+
 import net.amar.oreojava.db.DBGetter;
 import net.amar.oreojava.db.tables.Case;
 import net.amar.oreojava.db.DBTableBuilder;
@@ -43,6 +70,7 @@ public class Oreo {
     private static Connection connection;
     private static EventWaiter waiter;
     public static String[] prefixes = {"?", "m!", "$", ">"};
+
     public Oreo() throws InterruptedException, SQLException {
 
         waiter = new EventWaiter();
@@ -62,12 +90,24 @@ public class Oreo {
                 // No category
                 new PingCommand(),
 
-                // general
+                // ── General ────────────────────────────────────────────────
                 new CallEmbedTag(),
                 new GetPrefixes(),
                 new MCBugTracker(),
 
-                // staff
+                // ── Minecraft ──────────────────────────────────────────────
+                new McStatus(),
+                new McPlayer(),
+                new McSkin(),
+                new McWiki(),
+                new McVersion(),
+                new McBugReport(),
+                new Seed(),
+                new Recipe(),
+                new Enchants(),
+                new Spawn(),
+
+                // ── Staff (moderation) ─────────────────────────────────────
                 new BanText(),
                 new UnbanText(),
                 new MuteText(),
@@ -75,10 +115,19 @@ public class Oreo {
                 new KickText(),
                 new SupportbanText(),
                 new Warn(),
+                new GetWarns(),
+                new ClearWarns(),
                 new ModsBlacklist(),
                 new Lock(),
+                new Unlock(),
+                new Slowmode(),
+                new Purge(),
+                new Softban(),
+                new TempBan(),
+                new Note(),
+                new Role(),
 
-                // owner
+                // ── Owner ──────────────────────────────────────────────────
                 new HostInfo(),
                 new AddData(),
                 new EraseData(),
@@ -112,11 +161,12 @@ public class Oreo {
                 .build()
                 .awaitReady();
     }
+
     public static void main(String[] args) {
         try {
-           new Oreo();
+            new Oreo();
         } catch (Exception e) {
-            Log.error("Failed to build bot instance",e);
+            Log.error("Failed to build bot instance", e);
         }
     }
 
@@ -154,7 +204,7 @@ public class Oreo {
         return jda.getTextChannelById(id);
     }
 
-    public static Role getSupportbanRole() {
+    public static net.dv8tion.jda.api.entities.Role getSupportbanRole() {
         String id = DBGetter.getData(connection, "support_ban");
         if (id == null) return null;
         return jda.getRoleById(id);
